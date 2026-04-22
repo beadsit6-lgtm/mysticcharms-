@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mystic Charms - Orders</title>
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+        background: #f8e8f0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        color: #333;
+        line-height: 1.5;
+    }
+
+    .cart-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 22px 20px;
+        background: white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    .left-nav { display: flex; align-items: center; }
+    .back-link { display: flex; align-items: center; text-decoration: none; }
+    .icon { width: 30px; height: 30px; }
+    .home-text {
+        margin-left: 8px;
+        font-size: 25px;
+        color: #3d0026;
+        font-family: "Times new roman";
+        font-weight: bold;
+    }
+    .home-text:hover { color: #d63384; }
+    .center-nav { flex: 1; text-align: center; }
+    .cart-title {
+        font-size: 25px;
+        margin: 0;
+        font-weight: 600;
+        font-family: "Times new roman";
+    }
+
+    .orders-container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 0 20px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 40px;
+        color: #3d0026;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        margin-bottom: 25px;
+    }
+    .empty-icon { font-size: 48px; opacity: 0.3; margin-bottom: 15px; display: block; }
+    .empty-title { font-size: 20px; font-weight: 500; margin-bottom: 8px; }
+    .empty-text { font-size: 16px; }
+
+    .order-card {
+        background: white;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        border-left: 5px solid #d63384;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .order-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    .order-header {
+        padding: 25px 30px 20px;
+        border-bottom: 2px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    .order-number {
+        font-size: 18px;
+        font-weight: 600;
+        color: #3d0026;
+    }
+    .order-status {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .status-confirmed { background: #d4edda; color: #155724; }
+    .status-preparing { background: #fff3cd; color: #856404; }
+    .status-shipped { background: #cce5ff; color: #004085; }
+    .status-delivered, .status-completed { background: #d1ecf1; color: #0c5460; }
+    .order-date {
+        font-size: 14px;
+        color: #666;
+        white-space: nowrap;
+    }
+
+    .order-details {
+        padding: 0 30px 25px;
+    }
+    .customer-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 15px;
+    }
+    .customer-label { color: #666; font-weight: 500; }
+    .delivery-row {
+        padding: 16px 0;
+        font-size: 15px;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .items-section { padding: 16px 0; }
+    .item-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        font-size: 15px;
+    }
+    .order-total-row {
+        padding-top: 16px;
+        border-top: 2px solid #e9ecef;
+        font-size: 20px;
+        font-weight: 700;
+        color: #d63384;
+        display: flex;
+        justify-content: space-between;
+    }
+    .rate-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 18px 0 0;
+        padding: 12px 18px;
+        background: #d63384;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: background 0.2s ease;
+    }
+    .rate-button:hover {
+        background: #b02a6b;
+    }
+    .rating-summary {
+        margin-top: 16px;
+        padding: 16px;
+        border-radius: 14px;
+        background: #f8f0f4;
+        color: #3d0026;
+        font-size: 14px;
+    }
+    .rating-stars {
+        margin-top: 10px;
+        display: inline-flex;
+        gap: 4px;
+    }
+    .star {
+        width: 26px;
+        height: 26px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        color: #ccc;
+        cursor: pointer;
+        transition: color 0.15s ease;
+    }
+    .star:hover,
+    .star.filled { color: #ffbf00; }
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 50;
+    }
+    .hidden { display: none; }
+    .modal-content {
+        width: min(520px, 100%);
+        max-height: calc(100vh - 60px);
+        overflow-y: auto;
+        background: white;
+        border-radius: 18px;
+        padding: 28px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        position: relative;
+    }
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+    .close-icon {
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: #f0f0f0;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        color: #333;
+    }
+    .upload-group {
+        margin-top: 18px;
+    }
+    .upload-label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #333;
+    }
+    .image-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        font-size: 14px;
+        color: #333;
+        background: #fff;
+    }
+    .images-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 12px;
+    }
+    .image-thumb {
+        width: 80px;
+        height: 80px;
+        border-radius: 14px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid #ddd;
+    }
+    .image-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .remove-image-button {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 22px;
+        height: 22px;
+        border: none;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.55);
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .modal-title {
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: #3d0026;
+    }
+    .modal-text {
+        margin-bottom: 20px;
+        color: #555;
+    }
+    .feedback-textarea {
+        width: 100%;
+        min-height: 110px;
+        padding: 14px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        resize: vertical;
+        font-size: 15px;
+        margin-bottom: 18px;
+    }
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .modal-actions button {
+        padding: 12px 18px;
+        border-radius: 10px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .modal-actions .close-button {
+        background: #f0f0f0;
+        color: #333;
+    }
+    .modal-actions .submit-button {
+        background: #d63384;
+        color: white;
+    }
+    .completed-order-card { border-left-color: #28a745; opacity: 0.8; }
+    .completed-order-card .order-header {
+        padding: 15px 20px 12px;
+    }
+    .completed-order-card .order-details {
+        padding: 0 20px 15px;
+    }
+    .completed-order-card .customer-row {
+        padding: 8px 0;
+        font-size: 14px;
+    }
+    .completed-order-card .delivery-row {
+        padding: 8px 0;
+        font-size: 14px;
+    }
+    .completed-order-card .items-section {
+        padding: 8px 0;
+    }
+    .completed-order-card .item-row {
+        padding: 6px 0;
+        font-size: 14px;
+    }
+    .completed-order-card .order-total-row {
+        padding-top: 10px;
+        font-size: 16px;
+    }
+    .completed-order-card .order-number {
+        font-size: 16px;
+    }
+    .completed-order-card .order-status {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    .completed-order-card .order-date {
+        font-size: 13px;
+    }
+    .completed-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #28a745;
+        margin-bottom: 25px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    @media (max-width: 768px) {
+        .cart-nav {
+            padding: 12px 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .icon {
+            width: 26px;
+            height: 26px;
+        }
+
+        .home-text {
+            margin-left: 6px;
+            font-size: 16px;
+        }
+
+        .cart-title {
+            font-size: 16px;
+        }
+
+        .orders-container {
+            padding: 0 12px;
+            margin: 15px auto;
+        }
+
+        .order-card {
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .order-header {
+            padding: 18px 20px 15px;
+            gap: 12px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .order-number {
+            font-size: 14px;
+        }
+
+        .order-status {
+            font-size: 11px;
+            padding: 6px 12px;
+        }
+
+        .customer-row {
+            gap: 4px;
+            align-items: flex-start;
+            flex-direction: column;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            padding: 40px 25px;
+        }
+
+        .empty-title {
+            font-size: 16px;
+        }
+
+        .empty-text {
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .cart-nav {
+            padding: 10px 8px;
+        }
+
+        .home-text {
+            font-size: 13px;
+        }
+
+        .cart-title {
+            font-size: 13px;
+        }
+
+        .orders-container {
+            padding: 0 10px;
+        }
+
+        .order-header {
+            padding: 14px 15px;
+        }
+
+        .order-number {
+            font-size: 12px;
+        }
+
+        .order-status {
+            font-size: 10px;
+            padding: 5px 10px;
+        }
+
+        .customer-row {
+            font-size: 11px;
+        }
+
+        .empty-state {
+            padding: 30px 18px;
+        }
+
+        .empty-title {
+            font-size: 14px;
+        }
+
+        .empty-text {
+            font-size: 12px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .order-number {
+            font-size: 11px;
+        }
+
+        .customer-row {
+            font-size: 10px;
+        }
+
+        .empty-title {
+            font-size: 12px;
+        }
+    }
+</style>
+</head>
+<body>
+    <nav class="cart-nav">
+        <div class="left-nav">
+            <a href="index.html" class="back-link">
+                <img src="back.png" alt="Back" class="icon">
+                <span class="home-text">Home</span>
+            </a>
+        </div>
+        <div class="center-nav">
+            <h2 class="cart-title">My Orders</h2>
+        </div>
+    </nav>
+    <div class="orders-container">
+        <div id="ordersList"></div>
+    </div>
+
+    <div class="modal-overlay hidden" id="ratingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2 class="modal-title">Rate Your Order</h2>
+                    <p class="modal-text">Please share your rating and any feedback about your order.</p>
+                </div>
+                <button class="close-icon" type="button" id="closeModalIcon" aria-label="Close">&times;</button>
+            </div>
+            <div class="rating-stars" id="ratingStars">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <textarea id="feedbackInput" class="feedback-textarea" placeholder="Write your feedback here..."></textarea>
+            <div class="upload-group">
+                <label class="upload-label" for="imagesInput">Upload images (max 5)</label>
+                <input id="imagesInput" class="image-input" type="file" accept="image/*" multiple>
+                <div class="images-preview" id="imagesPreview"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="close-button" type="button" id="closeModalButton">Cancel</button>
+                <button class="submit-button" type="button" id="submitRatingButton">Upload/Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCDNdTMCcFZEts9nYT0ILUeN_v7YY09380",
+    authDomain: "mywebsite-829b5.firebaseapp.com",
+    projectId: "mywebsite-829b5",
+    storageBucket: "mywebsite-829b5.appspot.com",
+    messagingSenderId: "322237844842",
+    appId: "1:322237844842:web:eee18bf1c0f08fd748a913",
+    databaseURL: "https://mywebsite-829b5-default-rtdb.firebaseio.com"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const storage = getStorage(app);
+const ordersList = document.getElementById("ordersList");
+const ratingModal = document.getElementById("ratingModal");
+const ratingStars = document.getElementById("ratingStars");
+const feedbackInput = document.getElementById("feedbackInput");
+const imagesInput = document.getElementById("imagesInput");
+const imagesPreview = document.getElementById("imagesPreview");
+const submitRatingButton = document.getElementById("submitRatingButton");
+const closeModalButton = document.getElementById("closeModalButton");
+const closeModalIcon = document.getElementById("closeModalIcon");
+let activeRatingOrder = null;
+let activeRatingValue = 0;
+let selectedFiles = [];
+let existingImageUrls = []; // Track existing images for editing
+let ordersById = {};
+
+// Utility function to escape HTML and prevent XSS
+function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+ordersList.addEventListener("click", (event) => {
+    const button = event.target.closest(".rate-button");
+    if (!button) return;
+    const orderId = button.dataset.orderId;
+    if (!orderId) return;
+
+    activeRatingOrder = orderId;
+    openRatingModal(button.dataset.edit === "true", orderId);
+});
+
+ratingStars.addEventListener("click", (event) => {
+    const star = event.target.closest(".star");
+    if (!star) return;
+    activeRatingValue = Number(star.dataset.value) || 0;
+    updateStarDisplay(activeRatingValue);
+});
+
+closeModalButton.addEventListener("click", closeRatingModal);
+closeModalIcon.addEventListener("click", closeRatingModal);
+imagesInput.addEventListener("change", handleImageSelection);
+imagesPreview.addEventListener("click", (event) => {
+    const button = event.target.closest(".remove-image-button");
+    if (!button) return;
+    
+    const type = button.dataset.type;
+    const index = Number(button.dataset.index);
+    
+    if (type === "existing") {
+        // Remove existing image
+        existingImageUrls.splice(index, 1);
+        console.log(`Removed existing image, ${existingImageUrls.length} remaining`);
+    } else if (type === "new") {
+        // Remove new selected file and clean up blob URL
+        const thumb = button.closest(".image-thumb");
+        const blobUrl = thumb?.dataset.url;
+        if (blobUrl && blobUrl.startsWith('blob:')) {
+            URL.revokeObjectURL(blobUrl);
+        }
+        selectedFiles.splice(index, 1);
+        console.log(`Removed new image, ${selectedFiles.length} remaining`);
+    }
+    
+    updateImagePreviewWithExisting();
+});
+ratingModal.addEventListener("click", (event) => {
+    if (event.target === ratingModal) {
+        closeRatingModal();
+    }
+});
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !ratingModal.classList.contains("hidden")) {
+        closeRatingModal();
+    }
+});
+submitRatingButton.addEventListener("click", handleSubmitRating);
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const currentUser = JSON.parse(localStorage.getItem("userLogin"));
+    if (!currentUser) {
+        window.location.href = "login.html";
+        return;
+    }
+    await loadOrders(currentUser);
+});
+
+function getCustomerStatus(status) {
+    const statusMap = {
+        confirmed: "Confirmed",
+        preparing: "Preparing",
+        shipped: "Shipped",
+        delivered: "Delivered",
+        completed: "Completed"
+    };
+    return statusMap[status] || status || "Confirmed";
+}
+
+function formatCurrency(value) {
+    return `₱${Number(value).toFixed(2)}`;
+}
+
+async function loadOrders(currentUser) {
+    // Use real-time listener for order updates
+    const ordersRef = ref(db, "orders");
+    onValue(ordersRef, (snapshot) => {
+        let ordersFromFirebase = [];
+
+        if (snapshot.exists()) {
+            const raw = snapshot.val();
+            ordersFromFirebase = Object.values(raw).filter(order => order.userId === currentUser.userId).map(order => ({
+                ...order,
+                id: order.id,
+                date: order.date,
+                items: order.items,
+                subtotal: order.subtotal,
+                total: order.total,
+                deliveryMethod: order.delivery,
+                name: order.name,
+                phone: order.phone,
+                rating: order.rating || null,
+                feedback: order.feedback || null,
+                feedbackImages: Array.isArray(order.feedbackImages) ? order.feedbackImages : [],
+                status: order.status || "confirmed"
+            }));
+        }
+
+        ordersById = ordersFromFirebase.reduce((acc, order) => {
+            acc[order.id] = order;
+            return acc;
+        }, {});
+
+        const activeOrders = ordersFromFirebase.filter(order => order.status !== "delivered" && order.status !== "completed");
+        const completedOrders = ordersFromFirebase.filter(order => order.status === "delivered" || order.status === "completed");
+
+        let html = "";
+
+        if (activeOrders.length === 0 && completedOrders.length === 0) {
+            html = `
+                <div class="empty-state">
+                    <div class="empty-icon"></div>
+                    <div class="empty-title">No orders yet</div>
+                    <div class="empty-text">Your orders will appear here</div>
+                    <a href="index.html" style="display: inline-block; margin-top: 20px; color: #d63384; font-weight: 500; text-decoration: none;">Shop now</a>
+                </div>
+            `;
+        } else if (activeOrders.length === 0) {
+            html = `
+                <div class="empty-state">
+                    <div class="empty-icon"></div>
+                    <div class="empty-title">No active orders</div>
+                    <div class="empty-text">Check your completed orders below</div>
+                </div>
+            `;
+        }
+
+        // Active orders
+        activeOrders.reverse().forEach((order, index) => {
+            const statusText = getCustomerStatus(order.status);
+            const statusClass = `status-${order.status || 'confirmed'}`;
+            const orderItems = Array.isArray(order.items) ? order.items : [];
+            const orderSubtotal = order.subtotal !== undefined ? Number(order.subtotal) : 0;
+            const orderTotal = order.total !== undefined ? Number(order.total) : orderSubtotal + (order.deliveryMethod === "delivery" ? 50 : 0);
+            const orderNum = activeOrders.length - index;
+            const deliveryLabel = order.deliveryMethod === "delivery" ? "Delivery" : "Meetup (Daet)";
+
+            html += `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-number">Order #${orderNum}</div>
+                        <div class="order-status ${statusClass}">${statusText}</div>
+                        <div class="order-date">${new Date(order.date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}</div>
+                    </div>
+                    <div class="order-details">
+                        <div class="customer-row">
+                            <span class="customer-label">Customer:</span>
+                            <span>${order.name || 'N/A'}</span>
+                        </div>
+                        <div class="customer-row">
+                            <span class="customer-label">Phone:</span>
+                            <span>${order.phone || 'N/A'}</span>
+                        </div>
+                        <div class="delivery-row">
+                            <span class="customer-label">Delivery:</span>
+                            <span>${deliveryLabel}</span>
+                        </div>
+                        <div class="items-section">
+                            ${orderItems.map(item => {
+                                const itemPrice = Number(item.price) || 0;
+                                const itemQty = Number(item.quantity) || 0;
+                                return `
+                                    <div class="item-row">
+                                        <span>${item.name || 'Item'} (x${itemQty})</span>
+                                        <span>${formatCurrency(itemPrice * itemQty)}</span>
+                                    </div>`;
+                            }).join('')}
+                        </div>
+                        <div class="order-total-row">
+                            <span>Total:</span>
+                            <span>${formatCurrency(orderTotal)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Completed orders section
+        if (completedOrders.length > 0) {
+            html += `
+                <div class="section-header completed-title">Completed Orders (${completedOrders.length})</div>
+            `;
+
+            completedOrders.reverse().forEach((order, index) => {
+                const orderItems = Array.isArray(order.items) ? order.items : [];
+                const orderSubtotal = order.subtotal !== undefined ? Number(order.subtotal) : 0;
+                const orderTotal = order.total !== undefined ? Number(order.total) : orderSubtotal + (order.deliveryMethod === "delivery" ? 50 : 0);
+                const deliveryLabel = order.deliveryMethod === "delivery" ? "Delivery" : "Meetup (Daet)";
+                const statusText = getCustomerStatus(order.status);
+                const statusClass = order.status === "completed" ? "status-completed" : "status-delivered";
+                const hasRating = order.hasRated || order.rating;
+                const ratingSummary = hasRating ? `
+                    <div class="rating-summary">
+                        <strong>Your rating:</strong>
+                        <span class="rating-stars">${Array.from({ length: 5 }, (_, i) => `<span class="star ${i < Number(order.rating) ? 'filled' : ''}">&#9733;</span>`).join('')}</span>
+                        ${order.feedback ? `<div style="margin-top: 10px;">${escapeHtml(order.feedback)}</div>` : ''}
+                        ${order.feedbackImages && order.feedbackImages.length > 0 ? `
+                            <div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px;">
+                                ${order.feedbackImages.map((url, idx) => `<img src="${url}" alt="Feedback image ${idx + 1}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;" loading="lazy">`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>` : '';
+                const actionButton = hasRating ? `
+                    <button class="rate-button" data-order-id="${order.id}" data-edit="true">Edit Rating</button>
+                ` : `
+                    <button class="rate-button" data-order-id="${order.id}">Rate Your Order</button>
+                `;
+
+                html += `
+                    <div class="order-card completed-order-card">
+                        <div class="order-header">
+                            <div class="order-number">Completed #${completedOrders.length - index}</div>
+                            <div class="order-status ${statusClass}">${statusText}</div>
+                            <div class="order-date">${new Date(order.date).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })}</div>
+                        </div>
+                        <div class="order-details">
+                            <div class="customer-row">
+                                <span class="customer-label">Customer:</span>
+                                <span>${order.name || 'N/A'}</span>
+                            </div>
+                            <div class="customer-row">
+                                <span class="customer-label">Phone:</span>
+                                <span>${order.phone || 'N/A'}</span>
+                            </div>
+                            <div class="delivery-row">
+                                <span class="customer-label">Delivery:</span>
+                                <span>${deliveryLabel}</span>
+                            </div>
+                            <div class="items-section">
+                                ${orderItems.map(item => {
+                                    const itemPrice = Number(item.price) || 0;
+                                    const itemQty = Number(item.quantity) || 0;
+                                    return `
+                                        <div class="item-row">
+                                            <span>${item.name || 'Item'} (x${itemQty})</span>
+                                            <span>${formatCurrency(itemPrice * itemQty)}</span>
+                                        </div>`;
+                                }).join('')}
+                            </div>
+                            <div class="order-total-row">
+                                <span>Total:</span>
+                                <span>${formatCurrency(orderTotal)}</span>
+                            </div>
+                            ${ratingSummary}
+                            ${actionButton}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        ordersList.innerHTML = html;
+    });
+}
+
+function openRatingModal(isEdit, orderId) {
+    activeRatingOrder = orderId;
+    activeRatingValue = 0;
+    selectedFiles = [];
+    existingImageUrls = [];
+    imagesInput.value = "";
+
+    const orderData = ordersById[orderId] || {};
+    const existingRating = Number(orderData.rating) || 0;
+    const existingFeedback = orderData.feedback || "";
+    const existingImages = Array.isArray(orderData.feedbackImages) ? orderData.feedbackImages.filter(url => url) : [];
+    
+    console.log("Opening modal for order:", orderId);
+    console.log("Is edit mode:", isEdit);
+    console.log("Order data:", orderData);
+    console.log("Existing rating:", existingRating);
+    console.log("Existing images:", existingImages.length);
+    
+    // Load existing images for editing
+    if (isEdit && existingImages.length > 0) {
+        existingImageUrls = [...existingImages];
+        console.log(`Loaded ${existingImageUrls.length} existing images for editing`);
+    }
+
+    if (isEdit && existingRating > 0) {
+        activeRatingValue = existingRating;
+        feedbackInput.value = existingFeedback;
+    } else {
+        activeRatingValue = 0;
+        feedbackInput.value = "";
+    }
+
+    // Update modal title based on mode
+    const modalTitle = document.querySelector(".modal-title");
+    if (modalTitle) {
+        modalTitle.textContent = isEdit ? "Edit Your Rating" : "Rate Your Order";
+    }
+
+    updateStarDisplay(activeRatingValue);
+    updateImagePreviewWithExisting();
+    ratingModal.classList.remove("hidden");
+}
+
+function closeRatingModal() {
+    // Clean up object URLs to free memory
+    document.querySelectorAll('[data-url]').forEach(el => {
+        const url = el.dataset.url;
+        if (url && url.startsWith('blob:')) {
+            URL.revokeObjectURL(url);
+        }
+    });
+    
+    activeRatingOrder = null;
+    activeRatingValue = 0;
+    feedbackInput.value = "";
+    selectedFiles = [];
+    existingImageUrls = [];
+    imagesInput.value = "";
+    updateImagePreview();
+    updateStarDisplay(0);
+    ratingModal.classList.add("hidden");
+}
+
+function updateStarDisplay(rating) {
+    ratingStars.querySelectorAll(".star").forEach((star) => {
+        const starValue = Number(star.dataset.value) || 0;
+        star.classList.toggle("filled", starValue <= rating);
+    });
+}
+
+function handleImageSelection(event) {
+    const allFiles = Array.from(event.target.files || []);
+    
+    if (allFiles.length === 0) {
+        console.log("No files selected");
+        return;
+    }
+    
+    console.log(`Selected ${allFiles.length} files`);
+    
+    const imageFiles = allFiles.filter((file) => {
+        const isImage = file.type.startsWith("image/");
+        if (!isImage) {
+            console.warn(`Skipped non-image file: ${file.name}`);
+        }
+        return isImage;
+    });
+    
+    if (imageFiles.length !== allFiles.length) {
+        const skipped = allFiles.length - imageFiles.length;
+        alert(`${skipped} non-image file(s) were skipped. Only image files are allowed.`);
+    }
+    
+    if (imageFiles.length > 5) {
+        alert(`You selected ${imageFiles.length} images, but only 5 are allowed. The first 5 will be used.`);
+        selectedFiles = imageFiles.slice(0, 5);
+    } else {
+        selectedFiles = imageFiles;
+    }
+    
+    console.log(`Ready to upload ${selectedFiles.length} images`);
+    updateImagePreview();
+}
+
+function updateImagePreview() {
+    imagesPreview.innerHTML = selectedFiles.map((file, index) => {
+        try {
+            const url = URL.createObjectURL(file);
+            return `
+                <div class="image-thumb" data-index="${index}" data-type="new" data-url="${url}">
+                    <img src="${url}" alt="Preview image ${index + 1}" loading="lazy">
+                    <button class="remove-image-button" type="button" aria-label="Remove image" data-type="new" data-index="${index}">&times;</button>
+                </div>
+            `;
+        } catch (error) {
+            console.error("Error creating preview for file:", file.name, error);
+            return `
+                <div class="image-thumb" data-index="${index}" data-type="new">
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #f0f0f0; color: #666; font-size: 12px;">Invalid</div>
+                    <button class="remove-image-button" type="button" aria-label="Remove image" data-type="new" data-index="${index}">&times;</button>
+                </div>
+            `;
+        }
+    }).join('');
+}
+
+function updateImagePreviewWithExisting() {
+    // Combine existing and new images for display
+    const existingHTML = existingImageUrls.map((url, index) => `
+        <div class="image-thumb" data-index="${index}" data-type="existing">
+            <img src="${url}" alt="Existing image ${index + 1}" style="opacity: 0.8;" loading="lazy">
+            <span style="position: absolute; top: 4px; left: 4px; background: rgba(0,0,0,0.7); color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Existing</span>
+            <button class="remove-image-button" type="button" aria-label="Remove image" data-type="existing" data-index="${index}">&times;</button>
+        </div>
+    `).join('');
+    
+    const newHTML = selectedFiles.map((file, index) => {
+        try {
+            const url = URL.createObjectURL(file);
+            return `
+                <div class="image-thumb" data-index="${index}" data-type="new" data-url="${url}">
+                    <img src="${url}" alt="Preview image ${index + 1}" loading="lazy">
+                    <button class="remove-image-button" type="button" aria-label="Remove image" data-type="new" data-index="${index}">&times;</button>
+                </div>
+            `;
+        } catch (error) {
+            return '';
+        }
+    }).join('');
+    
+    imagesPreview.innerHTML = existingHTML + newHTML;
+}
+
+// Ultra-fast instant image upload - get URLs in parallel
+async function uploadSelectedImages(orderId, updateProgress, filesToUpload) {
+    if (!filesToUpload || filesToUpload.length === 0) {
+        console.log("No files to upload");
+        return [];
+    }
+
+    console.log("Starting upload for", filesToUpload.length, "files");
+
+    // Step 1: Upload all files in parallel
+    const uploadPromises = filesToUpload.map((file, index) => {
+        const timestamp = Date.now();
+        const randomId = Math.random().toString(36).substring(2, 8);
+        const ext = file.name.split('.').pop() || 'jpg';
+        const imageName = `${timestamp}_${randomId}_${index}.${ext}`;
+        const imageRef = storageRef(storage, `order-feedback/${orderId}/${imageName}`);
+        
+        console.log(`Uploading file ${index + 1}/${filesToUpload.length}: ${imageName}`);
+        
+        return uploadBytes(imageRef, file).then(snapshot => {
+            console.log(`File ${index + 1} uploaded successfully`);
+            return { snapshot, index };
+        }).catch(error => {
+            console.error(`Failed to upload file ${index + 1}:`, error);
+            throw error;
+        });
+    });
+
+    try {
+        // Wait for all uploads to complete
+        const uploadResults = await Promise.all(uploadPromises);
+        console.log("All uploads completed. Getting URLs...");
+        
+        // Step 2: Get all download URLs in parallel (faster than sequential)
+        const urlPromises = uploadResults.map(({ snapshot, index }) => {
+            if (updateProgress) updateProgress(index + 1);
+            return getDownloadURL(snapshot.ref).then(url => {
+                console.log(`URL ${index + 1} retrieved:`, url.substring(0, 50) + "...");
+                return url;
+            });
+        });
+        
+        const urls = await Promise.all(urlPromises);
+        console.log("All URLs retrieved. Total:", urls.length);
+        return urls;
+    } catch (error) {
+        console.error("Upload error:", error);
+        // Fallback: try to get partial results
+        const uploadResults = await Promise.allSettled(uploadPromises);
+        console.log("Fallback: Some uploads succeeded, retrieving partial results...");
+        
+        const urls = (await Promise.allSettled(
+            uploadResults
+                .filter(r => r.status === 'fulfilled')
+                .map(r => getDownloadURL(r.value.snapshot.ref))
+        ))
+            .filter(r => r.status === 'fulfilled')
+            .map(r => r.value)
+            .filter(Boolean);
+        
+        console.log("Fallback retrieved", urls.length, "URLs");
+        return urls.length > 0 ? urls : [];
+    }
+}
+
+async function handleSubmitRating() {
+    if (!activeRatingOrder) return;
+    if (activeRatingValue < 1) {
+        alert("Please choose a star rating before submitting.");
+        return;
+    }
+
+    const feedbackText = feedbackInput.value.trim();
+    if (!feedbackText) {
+        alert("Please write a comment before submitting.");
+        return;
+    }
+
+    const currentUser = JSON.parse(localStorage.getItem("userLogin"));
+    if (!currentUser) {
+        alert("Please log in to submit a rating.");
+        return;
+    }
+    
+    // Immediately prepare data before any async operations
+    const currentOrderData = ordersById[activeRatingOrder] || {};
+    const maskedName = maskCustomerName(currentOrderData.name || currentUser.userId);
+    const orderId = activeRatingOrder;
+    const rating = activeRatingValue;
+    const feedback = feedbackText;
+    const files = [...selectedFiles]; // Capture current files BEFORE closing modal
+    const existing = [...existingImageUrls]; // Capture existing URLs
+    
+    console.log("Rating submission - Files to upload:", files.length, "Existing images:", existing.length);
+    
+    // Close modal instantly - don't wait for uploads
+    closeRatingModal();
+    alert("✓ Thank you! Your rating is being saved...");
+    
+    // Background upload and save (fire and forget)
+    submitRatingButton.disabled = true;
+    (async () => {
+        try {
+            console.log("Background save started for order:", orderId);
+            
+            // Upload images in parallel - pass files array to function
+            let uploadedUrls = [];
+            if (files.length > 0) {
+                console.log("Starting upload of", files.length, "images...");
+                uploadedUrls = await uploadSelectedImages(orderId, null, files);
+                console.log("Upload completed. URLs received:", uploadedUrls.length);
+            }
+            
+            // Prepare final data
+            const allImageUrls = [...existing, ...uploadedUrls].slice(0, 5);
+            console.log("Total images to save (existing + new):", allImageUrls.length, allImageUrls);
+            
+            const ratingData = {
+                rating: rating,
+                feedback: feedback,
+                feedbackImages: allImageUrls.length > 0 ? allImageUrls : [],
+                customerName: maskedName,
+                date: new Date().toISOString(),
+                orderId: orderId,
+                userId: currentUser.userId,
+                hasRated: true,
+                ratedAt: Date.now()
+            };
+            
+            console.log("Saving rating data:", ratingData);
+            
+            // Save to database in parallel
+            const orderRef = ref(db, `orders/${orderId}`);
+            const ratingsRef = ref(db, `ratings/${orderId}`);
+            await Promise.all([
+                update(orderRef, ratingData),
+                update(ratingsRef, ratingData)
+            ]);
+            
+            console.log("Rating saved successfully to database");
+            
+            // Update local cache
+            if (ordersById[orderId]) {
+                ordersById[orderId] = { ...ordersById[orderId], ...ratingData };
+            }
+            
+        } catch (error) {
+            console.error("Error in background save:", error);
+        } finally {
+            submitRatingButton.disabled = false;
+            submitRatingButton.textContent = "Upload/Submit";
+        }
+    })();
+}
+
+// Mask customer name for privacy (e.g., "John Doe" → "J***e")
+function maskCustomerName(name) {
+    if (!name || name.length < 2) return "Customer";
+    const trimmed = String(name).trim();
+    if (trimmed.length <= 2) return trimmed;
+    
+    const firstChar = trimmed.charAt(0);
+    const lastChar = trimmed.charAt(trimmed.length - 1);
+    const maskedLength = Math.max(trimmed.length - 2, 3);
+    const masked = "*".repeat(maskedLength);
+    
+    return `${firstChar}${masked}${lastChar}`;
+}
+
+</script>
+</body>
+</html>
+
+
+

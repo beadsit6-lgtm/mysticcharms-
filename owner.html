@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owner Dashboard - Mystic Charms</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f8e8f0;
+    padding: 20px;
+}
+
+/* LOGIN */
+.login {
+    max-width: 400px;
+    margin: 100px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+/* FIXED INPUT WIDTH */
+.login input {
+    width: 90%;
+    max-width: 300px;
+    padding: 12px;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.login button {
+    width: 90%;
+    max-width: 300px;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+    background: #d63384;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+button {
+    background: #d63384;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* DASHBOARD */
+.dashboard {
+    display: none;
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* STATS */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* SECTIONS */
+.section-title {
+    margin-top: 35px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* ORDER BOX */
+.order {
+    background: white;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* COMPLETED ORDER STYLES */
+.order-card {
+    background: white;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    border-left: 5px solid #d63384;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.order-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.completed-order-card { 
+    border-left-color: #28a745; 
+    opacity: 0.8; 
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 25px 30px 20px;
+    border-bottom: 2px solid #f0f0f0;
+    gap: 16px;
+}
+
+.completed-order-card .order-header {
+    padding: 15px 20px 12px;
+}
+
+.order-number {
+    font-size: 18px;
+    font-weight: 600;
+    color: #3d0026;
+}
+
+.completed-order-card .order-number {
+    font-size: 16px;
+}
+
+.order-status {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.completed-order-card .order-status {
+    font-size: 12px;
+    padding: 6px 12px;
+}
+
+.status-delivered { 
+    background: #d4edda; 
+    color: #155724; 
+}
+
+.order-date {
+    font-size: 14px;
+    color: #666;
+    white-space: nowrap;
+}
+
+.completed-order-card .order-date {
+    font-size: 13px;
+}
+
+.order-details {
+    padding: 0 30px 25px;
+}
+
+.completed-order-card .order-details {
+    padding: 0 20px 15px;
+}
+
+.customer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 15px;
+}
+
+.completed-order-card .customer-row {
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.customer-label { 
+    color: #666; 
+    font-weight: 500; 
+}
+
+.delivery-row {
+    padding: 16px 0;
+    font-size: 15px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.completed-order-card .delivery-row {
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.items-section { 
+    padding: 16px 0; 
+}
+
+.completed-order-card .items-section {
+    padding: 8px 0;
+}
+
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 15px;
+}
+
+.completed-order-card .item-row {
+    padding: 6px 0;
+    font-size: 14px;
+}
+
+.order-total-row {
+    padding-top: 16px;
+    border-top: 2px solid #e9ecef;
+    font-size: 20px;
+    font-weight: 700;
+    color: #d63384;
+    display: flex;
+    justify-content: space-between;
+}
+
+.completed-order-card .order-total-row {
+    padding-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.completed-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #28a745;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.active-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #d63384;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.active-order-card { 
+    border-left-color: #d63384; 
+}
+
+.active-order-card .order-header {
+    padding: 15px 20px 12px;
+}
+
+.active-order-card .order-details {
+    padding: 0 20px 15px;
+}
+
+.active-order-card .customer-row {
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.active-order-card .delivery-row {
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.active-order-card .items-section {
+    padding: 8px 0;
+}
+
+.active-order-card .item-row {
+    padding: 6px 0;
+    font-size: 14px;
+}
+
+.active-order-card .order-total-row {
+    padding-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.status-confirmed { background: #fff3cd; color: #856404; }
+.status-preparing { background: #cce5ff; color: #004085; }
+.status-shipped { background: #d1ecf1; color: #0c5460; }
+.status-delivered { background: #d4edda; color: #155724; }
+
+.management-row {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #f0f0f0;
+}
+
+.status-select {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.update-btn {
+    padding: 12px 20px;
+    background: #d63384;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.update-btn:hover {
+    background: #c2185b;
+}
+
+/* DATE TIME STYLE */
+.order-datetime {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* ACCOUNTS SECTION */
+.account {
+    background: white;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.account-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    font-size: 13px;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .login {
+        padding: 25px 20px;
+        border-radius: 12px;
+        max-width: 90%;
+    }
+
+    .login h2 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .login input {
+        padding: 10px;
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+
+    .login button {
+        padding: 10px 20px;
+        font-size: 12px;
+    }
+
+    .dashboard {
+        padding: 15px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .card h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .card p {
+        font-size: 12px;
+    }
+
+    .section-title {
+        font-size: 18px;
+        margin: 20px 0 15px;
+    }
+
+    .order-item {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    .order-status {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+
+    .order-info {
+        font-size: 12px;
+    }
+
+    .order-products {
+        font-size: 11px;
+    }
+
+    .account-info {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 8px;
+    }
+
+    .login {
+        padding: 20px 15px;
+        max-width: 95%;
+    }
+
+    .login h2 {
+        font-size: 16px;
+    }
+
+    .login input {
+        padding: 8px;
+        font-size: 11px;
+    }
+
+    .login button {
+        padding: 8px 16px;
+        font-size: 11px;
+    }
+
+    .dashboard {
+        padding: 12px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .card {
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .card h3 {
+        font-size: 16px;
+    }
+
+    .card p {
+        font-size: 11px;
+    }
+
+    .section-title {
+        font-size: 16px;
+        margin: 15px 0 12px;
+    }
+
+    .order-item {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .order-status {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+
+    .order-info {
+        font-size: 11px;
+    }
+
+    .order-products {
+        font-size: 10px;
+    }
+
+    .account-info {
+        gap: 6px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login h2 {
+        font-size: 14px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .card h3 {
+        font-size: 14px;
+    }
+
+    .card p {
+        font-size: 10px;
+    }
+
+    .section-title {
+        font-size: 14px;
+    }
+
+    .order-info {
+        font-size: 10px;
+    }
+
+    .account-info {
+        font-size: 9px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="login" id="loginBox">
+    <h2>Owner Login</h2>
+    <input type="password" id="pass" placeholder="Enter password">
+    <button onclick="login()">Login</button>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="card"><h3 id="orders">0</h3><p>Orders</p></div>
+        <div class="card"><h3 id="active">0</h3><p>Active</p></div>
+        <div class="card"><h3 id="completed">0</h3><p>Completed</p></div>
+        <div class="card"><h3 id="sales">₱0</h3><p>Total Sales</p></div>
+        <div class="card"><h3 id="rating">0⭐</h3><p>Rating</p></div>
+        <div class="card"><h3 id="accounts">0</h3><p>Accounts</p></div>
+    </div>
+
+    <!-- ACTIVE -->
+    <h1 class="section-title">Active Orders</h1>
+    <div id="activeList"></div>
+
+    <!-- COMPLETED -->
+    <h1 class="section-title">Completed Orders</h1>
+    <div id="completedList"></div>
+
+    <!-- RATINGS -->
+    <h1 class="section-title">Ratings</h1>
+    <div id="ratingList"></div>
+
+        <!-- ACCOUNTS SECTION -->
+    <h1 class="section-title">Accounts</h1>
+    <div id="accountsList"></div>
+
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+import {
+    getDatabase,
+    ref,
+    get,
+    set,
+    update
+} from "https://www.gstatic.com/firebasejs/12.12.0/firebase-database.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCDCdTMCcFZEts9nYT0ILUeN_v7YY09380",
+    authDomain: "mywebsite-829b5.firebaseapp.com",
+    projectId: "mywebsite-829b5",
+    storageBucket: "mywebsite-829b5.appspot.com",
+    messagingSenderId: "322237844842",
+    appId: "1:322237844842:web:eee18bf1c0f08fd748a913",
+    databaseURL: "https://mywebsite-829b5-default-rtdb.firebaseio.com"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const PASSWORD = "mystic2024";
+
+let isAdmin = false;
+
+/* ================= ROLE CHECK (IMPORTANT SECURITY LAYER) ================= */
+async function checkAdminAccess() {
+    const session = JSON.parse(localStorage.getItem("userLogin"));
+
+    if (!session) {
+        alert("Please login first.");
+        window.location.href = "login.html";
+        return false;
+    }
+
+    const snap = await get(ref(db, "users"));
+
+    if (!snap.exists()) {
+        alert("No users found.");
+        return false;
+    }
+
+    const users = snap.val();
+
+    let user = Object.values(users).find(u => u.email === session.email);
+
+    if (!user || user.role !== "admin") {
+        alert("Access denied. Admin only.");
+        window.location.href = "index.html";
+        return false;
+    }
+
+    isAdmin = true;
+    return true;
+}
+
+/* ================= FIREBASE FETCH ================= */
+async function getOrders() {
+    const snap = await get(ref(db, "orders"));
+    return snap.exists() ? Object.values(snap.val()) : [];
+}
+
+async function getUsers() {
+    const snap = await get(ref(db, "users"));
+    return snap.exists() ? Object.values(snap.val()) : [];
+}
+
+/* ================= UTILITY FUNCTIONS ================= */
+function getCustomerStatus(status) {
+    const statusMap = {
+        confirmed: "Confirmed",
+        preparing: "Preparing",
+        shipped: "Shipped",
+        delivered: "Delivered"
+    };
+    return statusMap[status] || status || "Confirmed";
+}
+window.login = async function () {
+
+    const allowed = await checkAdminAccess();
+    if (!allowed) return;
+
+    if (document.getElementById("pass").value === PASSWORD) {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+        load();
+    } else {
+        alert("Wrong password");
+    }
+};
+
+/* ================= LOAD DASHBOARD ================= */
+async function load() {
+    let orders = await getOrders();
+    let users = await getUsers();
+
+    let active = orders.filter(o => o.status !== "delivered");
+    let completed = orders.filter(o => o.status === "delivered");
+    let rated = orders.filter(o => o.rating);
+
+    let sales = orders.reduce((sum, o) => sum + num(o.total), 0);
+    let avg = rated.length
+        ? (rated.reduce((s, o) => s + num(o.rating), 0) / rated.length).toFixed(1)
+        : 0;
+
+    document.getElementById("orders").innerText = orders.length;
+    document.getElementById("active").innerText = active.length;
+    document.getElementById("completed").innerText = completed.length;
+    document.getElementById("sales").innerText = "₱" + sales;
+    document.getElementById("rating").innerText = avg + "⭐";
+    document.getElementById("accounts").innerText = users.length;
+
+    renderAccounts(users);
+    renderActive(active, orders);
+    renderCompleted(completed);
+    renderRatings(rated);
+}
+
+/* ================= ACCOUNTS ================= */
+function renderAccounts(users) {
+    let div = document.getElementById("accountsList");
+    div.innerHTML = "";
+
+    if (!users.length) {
+        div.innerHTML = "<p class='order'>No accounts registered yet.</p>";
+        return;
+    }
+
+    users.forEach(user => {
+        div.innerHTML += `
+            <div class="account">
+                <div class="order-datetime">${user.createdAt || "No date"}</div>
+                <div class="account-info">
+                    <div><b>${user.fullname || "N/A"}</b></div>
+                    <div>${user.email || "N/A"}</div>
+                    <div>${user.mobile || "N/A"}</div>
+                    <div style="font-size:11px;color:#888">
+                        Role: ${user.role || "user"}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+/* ================= ACTIVE ORDERS ================= */
+function renderActive(active, allOrders) {
+    let div = document.getElementById("activeList");
+    div.innerHTML = "";
+
+    if (!active.length) {
+        div.innerHTML = "<p>No active orders yet.</p>";
+        return;
+    }
+
+    let html = `<div class="section-header active-title">Active Orders (${active.length})</div>`;
+
+    active.reverse().forEach((order, index) => {
+        let orderIndex = allOrders.findIndex(o => o.id === order.id);
+        const orderItems = Array.isArray(order.items) ? order.items : [];
+        const deliveryLabel = order.delivery || "N/A";
+        const statusClass = `status-${order.status || 'confirmed'}`;
+
+        html += `
+            <div class="order-card active-order-card">
+                <div class="order-header">
+                    <div class="order-number">Active #${active.length - index}</div>
+                    <div class="order-status ${statusClass}">${getCustomerStatus(order.status)}</div>
+                    <div class="order-date">${getDate(order)}</div>
+                </div>
+                <div class="order-details">
+                    <div class="customer-row">
+                        <span class="customer-label">Customer:</span>
+                        <span>${order.name || 'N/A'}</span>
+                    </div>
+                    <div class="customer-row">
+                        <span class="customer-label">Phone:</span>
+                        <span>${order.phone || 'N/A'}</span>
+                    </div>
+                    <div class="delivery-row">
+                        <span class="customer-label">Delivery:</span>
+                        <span>${deliveryLabel}</span>
+                    </div>
+                    <div class="items-section">
+                        ${orderItems.map(item => {
+                            const itemPrice = Number(item.price) || 0;
+                            const itemQty = Number(item.quantity) || 0;
+                            return `
+                                <div class="item-row">
+                                    <span>${item.name || 'Item'} (x${itemQty})</span>
+                                    <span>₱${(itemPrice * itemQty).toFixed(2)}</span>
+                                </div>`;
+                        }).join('')}
+                    </div>
+                    <div class="order-total-row">
+                        <span>Total:</span>
+                        <span>₱${num(order.total).toFixed(2)}</span>
+                    </div>
+                    <div class="management-row">
+                        <select id="status-${orderIndex}" class="status-select">
+                            <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                            <option value="preparing" ${order.status === 'preparing' ? 'selected' : ''}>Preparing</option>
+                            <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                            <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                        </select>
+                        <button onclick="updateStatus('${order.id}', ${orderIndex})" class="update-btn">Update</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    div.innerHTML = html;
+}
+
+/* ================= UPDATE ORDER ================= */
+window.updateStatus = async function(orderId, index) {
+    const newStatus = document.getElementById(`status-${index}`).value;
+
+    try {
+        await update(ref(db, `orders/${orderId}`), {
+            status: newStatus
+        });
+
+        // Show success feedback
+        const button = document.querySelector(`button[onclick="updateStatus('${orderId}', ${index})"]`);
+        const originalText = button.textContent;
+        button.textContent = "Updated!";
+        button.style.background = "#28a745";
+        setTimeout(() => {
+            button.textContent = originalText;
+            button.style.background = "";
+        }, 2000);
+
+        load();
+    } catch (error) {
+        console.error("Update error:", error);
+        alert("Failed to update order status. Please try again.");
+    }
+};
+
+/* ================= COMPLETED ================= */
+function renderCompleted(completed) {
+    let div = document.getElementById("completedList");
+    div.innerHTML = "";
+
+    if (!completed.length) {
+        div.innerHTML = "<p>No completed orders yet.</p>";
+        return;
+    }
+
+    let html = `<div class="section-header completed-title">Completed Orders (${completed.length})</div>`;
+
+    completed.reverse().forEach((order, index) => {
+        const orderItems = Array.isArray(order.items) ? order.items : [];
+        const deliveryLabel = order.delivery || "N/A";
+
+        html += `
+            <div class="order-card completed-order-card">
+                <div class="order-header">
+                    <div class="order-number">Completed #${completed.length - index}</div>
+                    <div class="order-status status-delivered">Delivered</div>
+                    <div class="order-date">${getDate(order)}</div>
+                </div>
+                <div class="order-details">
+                    <div class="customer-row">
+                        <span class="customer-label">Customer:</span>
+                        <span>${order.name || 'N/A'}</span>
+                    </div>
+                    <div class="customer-row">
+                        <span class="customer-label">Phone:</span>
+                        <span>${order.phone || 'N/A'}</span>
+                    </div>
+                    <div class="delivery-row">
+                        <span class="customer-label">Delivery:</span>
+                        <span>${deliveryLabel}</span>
+                    </div>
+                    <div class="items-section">
+                        ${orderItems.map(item => {
+                            const itemPrice = Number(item.price) || 0;
+                            const itemQty = Number(item.quantity) || 0;
+                            return `
+                                <div class="item-row">
+                                    <span>${item.name || 'Item'} (x${itemQty})</span>
+                                    <span>₱${(itemPrice * itemQty).toFixed(2)}</span>
+                                </div>`;
+                        }).join('')}
+                    </div>
+                    <div class="order-total-row">
+                        <span>Total:</span>
+                        <span>₱${num(order.total).toFixed(2)}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    div.innerHTML = html;
+}
+
+/* ================= RATINGS ================= */
+function renderRatings(rated) {
+    let div = document.getElementById("ratingList");
+    div.innerHTML = "";
+
+    if (!rated.length) {
+        div.innerHTML = "<p>No ratings yet.</p>";
+        return;
+    }
+
+    let html = `<div class="section-header" style="font-size: 20px; font-weight: 600; color: #d63384; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">Ratings (${rated.length})</div>`;
+
+    rated.forEach(o => {
+        const orderItems = Array.isArray(o.items) ? o.items : [];
+        const productsList = orderItems.length 
+            ? orderItems.map(item => `<div style="padding: 5px 0; font-size: 14px;">• ${item.name} (${item.quantity}x)</div>`).join('') 
+            : '<div style="padding: 5px 0; font-size: 14px; color: #999;">No items</div>';
+        
+        const feedback = o.feedback ? `<div style="margin-top: 12px; padding: 10px; background: #f8f9fa; border-radius: 5px; font-size: 13px; color: #555;"><b>Feedback:</b> ${o.feedback}</div>` : '';
+        const images = Array.isArray(o.feedbackImages) && o.feedbackImages.length ? `<div style="margin-top: 8px; font-size: 12px; color: #d63384;"><b>📸 ${o.feedbackImages.length} image(s) attached</b></div>` : '';
+
+        html += `
+            <div class="order-card" style="border-left-color: #ffb800;">
+                <div class="order-header">
+                    <div class="order-number">Rating #${rated.indexOf(o) + 1}</div>
+                    <div class="order-status" style="background: #fff8e1; color: #f9a825; font-weight: 600;">⭐ ${o.rating}/5</div>
+                    <div class="order-date">${getDate(o)}</div>
+                </div>
+                <div class="order-details">
+                    <div class="customer-row">
+                        <span class="customer-label">Customer:</span>
+                        <span><b>${o.name || 'N/A'}</b></span>
+                    </div>
+                    <div class="customer-row">
+                        <span class="customer-label">Products Rated:</span>
+                    </div>
+                    <div style="padding-left: 10px; margin: 8px 0;">
+                        ${productsList}
+                    </div>
+                    ${feedback}
+                    ${images}
+                </div>
+            </div>
+        `;
+    });
+
+    div.innerHTML = html;
+}
+
+/* ================= HELPERS ================= */
+function renderItems(items) {
+    if (!items) return "No items";
+    return items.map(i => {
+        const price = num(i.price);
+        const quantity = num(i.quantity);
+        const total = price * quantity;
+        return `• ${i.name} x${quantity} @ ₱${price.toFixed(2)} = ₱${total.toFixed(2)}`;
+    }).join("<br>");
+}
+
+function num(v) {
+    return isNaN(Number(v)) ? 0 : Number(v);
+}
+
+function getDate(order) {
+    if (!order.date) return "No date";
+    return new Date(order.date).toLocaleString();
+}
+</script>
+
+</body>
+</html>

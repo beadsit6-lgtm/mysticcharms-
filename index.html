@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mystic Charms</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body { 
+            background: linear-gradient(135deg, #fff1f7 0%, #f8e8f0 100%); 
+            font-family: Arial; 
+            color: #333;
+        }
+
+        nav {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 30%;
+            vertical-align: middle;
+        }
+        
+        .logo-nav {
+            font-size: 25px;
+            font-family: "Times New Roman";
+            font-weight: bold;
+            color: #d63384;
+            margin-right: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            min-width: fit-content;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: white;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .nav-icons {
+            display: flex;
+            margin-right: 15px;
+            gap: 17px;
+            align-items: center;
+        }
+
+        .icon {
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            object-fit: contain;
+            margin-right: 1px;
+            padding: 5px;
+            min-width: 35px;
+            min-height: 35px;
+        }
+
+        .icon:hover {
+            opacity: 0.7;
+            transition: 0.2s ease-in-out;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-menu a {
+            text-decoration: none;
+            padding: 25px;
+            color: #3d0026;
+            font-size: 22px;
+            font-family: "Times New Roman";
+            font-weight: 500;
+            display: block;
+            transition: color 0.2s ease;
+        }
+
+        .nav-menu a:hover { 
+            color: #d63384; 
+        }
+
+        .nav-settings-icon {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+            
+        section {
+            padding: 20px 50px 80px 50px;
+            min-height: 100vh;
+            scroll-margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #contact,
+        #about,
+        #bracelets,
+        #keychain {
+            padding-top: 80px;
+            min-height: auto;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 120px 20px 250px;
+            min-height: auto;
+            background: 
+                linear-gradient(rgba(255, 241, 247, 0.5), rgba(248, 232, 240, 0.8)),
+                url('image1.jpg') no-repeat center / cover;
+            scroll-margin-top: 90px;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        
+        .hero h1 {
+            font-size: 72px;
+            font-family: "Times New Roman";
+            color: #3d0026;
+            font-weight: 900;
+            letter-spacing: 3px;
+        }
+        
+        .subtitle {
+            font-size: 25px;
+            font-family: "Times New Roman";
+            color: #000000;
+            font-style: italic;
+            margin-bottom: 30px;
+            margin-left: 0;
+            margin-top: 20px;
+        }
+        
+        .desc {
+            font-size: 30px;
+            font-family: "Times New Roman";
+            color: #3d0026;
+            max-width: 550px;
+            margin: 0 auto;
+            margin-top: 90px;
+            line-height: 1.6;
+        }
+
+        h1 { 
+            color: #3d0026; 
+            font-size: 50px; 
+            margin-bottom: 50px;
+            text-align: center; 
+            font-family: "Times New Roman"; 
+            margin-top: 0;
+        }
+
+        /* PRODUCT GRID */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+            color: 000000;
+        }
+
+        .heart-icon {
+            position: absolute;
+            bottom: 85px;
+            right: 50px;
+            width: 35px !important;
+            height: 35px !important;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.2s ease-in-out;
+        }
+        
+        .heart-icon.added {
+            color: #d63384;
+        }
+
+        .checkoutimg {
+            position: absolute;
+            bottom: 85px;
+            right: 10px;
+            width: 35px !important;
+            height: 35px !important;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.2s ease-in-out;
+        }
+
+        .card {
+            position: relative;
+            background: #fff;
+            padding: 10px;
+            height: auto;
+            min-height: 400px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .card h3 {
+            margin: 10px 0 5px;
+            font-size: 16px;
+            font-family: "Times new roman";
+        }
+
+        .price {
+            color: #d63384;
+            font-weight: bold;
+            font-family: "Times new roman";
+        }
+
+        .abouttext {
+            font-family: "Times New Roman";
+            font-size: 25px;
+            text-align: center;
+            margin-top: 70px;
+        }
+
+        /* CONTACT CARD – ROWS */
+        .contactcard {
+            background: #f9eee2;
+            padding: 25px 20px;
+            width: 90%;
+            max-width: 600px;
+            height: auto;
+            min-height: 280px;
+            border-radius: 50px;
+            margin: 65px auto 0;
+            margin-top: 50px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: flex-start;
+            box-shadow: 0 10px 50px rgba(229, 175, 165, 1);
+        }
+
+        .contact-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: "Times New Roman";
+            font-size: 25px;
+            line-height: 1.8;
+        }
+
+        .contact-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 30%;
+            vertical-align: middle;
+        }
+            
+        footer {
+            text-align: center;
+            padding: 25px 20px;
+            background: #d63384;
+            color: white;
+            font-family: "Times new roman";
+            margin-top: auto;
+            line-height: 1.5;
+        }
+
+        /* Ensure images are responsive */
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Ensure text is readable on all sizes */
+        body {
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        @media (max-width: 768px) {
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            nav {
+                padding: 10px 8px;
+                flex-direction: column;
+                gap: 6px;
+                align-items: center;
+            }
+            
+            .logo-nav {
+                font-size: 16px;
+                margin-right: 4px;
+            }
+            
+            .logo-img {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .nav-menu {
+                display: flex;
+                gap: 6px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-menu a {
+                font-size: 12px;
+                padding: 5px 6px;
+                white-space: nowrap;
+            }
+            
+            .nav-icons {
+                gap: 10px;
+                margin-right: 8px;
+                display: flex;
+                justify-content: center;
+            }
+            
+            .icon {
+                width: 26px;
+                height: 26px;
+            }
+            
+            .user-profile {
+                font-size: 11px;
+                padding: 5px 10px;
+            }
+            
+            .user-profile-icon {
+                width: 20px;
+                height: 20px;
+                font-size: 9px;
+            }
+            
+            section {
+                padding: 20px 12px;
+                scroll-margin-top: 50px;
+                min-height: auto;
+            }
+            
+            .hero {
+                padding: 60px 12px 180px;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+                margin-top: 0;
+                letter-spacing: 0.5px;
+            }
+            
+            .subtitle, .desc {
+                font-size: 14px;
+            }
+            
+            .desc {
+                max-width: 100%;
+            }
+            
+            h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            
+            .card {
+                min-height: 300px;
+                padding: 8px;
+            }
+            
+            .card img {
+                height: 180px;
+            }
+            
+            .card h3 {
+                font-size: 12px;
+                margin: 6px 0 2px;
+            }
+            
+            .price {
+                font-size: 12px;
+            }
+            
+            .heart-icon {
+                bottom: 60px;
+                right: 30px;
+                width: 28px !important;
+                height: 28px !important;
+            }
+            
+            .checkoutimg {
+                bottom: 60px;
+                right: 6px;
+                width: 28px !important;
+                height: 28px !important;
+            }
+            
+            .contactcard {
+                width: 95%;
+                padding: 16px 12px;
+                min-height: auto;
+                margin: 30px auto 0;
+            }
+            
+            .contact-row {
+                font-size: 12px;
+                line-height: 1.5;
+                gap: 6px;
+            }
+            
+            .contact-logo {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+            }
+            
+            .abouttext {
+                font-size: 16px;
+                margin-top: 30px;
+            }
+            
+            .reviews-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            
+            .reviews-subtitle {
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
+            
+            .review-card {
+                padding: 14px;
+            }
+            
+            .review-customer {
+                font-size: 14px;
+            }
+            
+            .review-comment {
+                font-size: 12px;
+            }
+            
+            .review-stars {
+                font-size: 18px;
+            }
+            
+            .review-carousel {
+                aspect-ratio: 1 / 1;
+                margin-bottom: 8px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            nav {
+                max-width: 100%;
+                margin: auto;
+                padding: 15px 15px;
+                flex-wrap: wrap;
+            }
+
+            .logo-nav {
+                font-size: 20px;
+            }
+
+            .nav-menu {
+                gap: 12px;
+                align-items: center;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-menu a {
+                padding: 12px 10px;
+                font-size: 18px;
+            }
+            
+            .nav-icons {
+                gap: 15px;
+            }
+            
+            .icon {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .hero h1 { 
+                font-size: 48px; 
+                margin-top: 0;
+            }
+            
+            .subtitle, .desc {
+                font-size: 20px;
+            }
+            
+            .hero {
+                padding: 100px 20px 200px;
+            }
+            
+            .abouttext {
+                font-size: 22px;
+                max-width: 100%;
+                margin: 40px auto 0;
+            }
+            
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            section {
+                padding: 40px 30px;
+                min-height: auto;
+                scroll-margin-top: 80px;
+            }
+
+            .reviews-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .reviews-subtitle {
+                font-size: 20px;
+                margin-bottom: 40px;
+            }
+
+            .review-card {
+                padding: 20px;
+            }
+
+            .review-customer {
+                font-size: 18px;
+            }
+
+            .contactcard {
+                width: 85%;
+                max-width: 550px;
+                padding: 22px 18px;
+            }
+
+            .contact-row {
+                font-size: 18px;
+            }
+
+            .contact-logo {
+                width: 38px;
+                height: 38px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            nav {
+                max-width: 100%;
+                margin: auto;
+                padding: 8px 6px;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .logo-nav {
+                font-size: 14px;
+                margin-right: 0;
+            }
+            
+            .logo-img {
+                width: 26px;
+                height: 26px;
+                margin-right: 3px;
+            }
+
+            .nav-menu {
+                gap: 4px;
+                align-items: center;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-menu a {
+                padding: 4px 5px;
+                font-size: 10px;
+                white-space: nowrap;
+            }
+            
+            .nav-icons {
+                gap: 8px;
+                margin-right: 5px;
+                display: flex;
+                justify-content: center;
+            }
+            
+            .icon {
+                width: 22px;
+                height: 22px;
+            }
+            
+            .user-profile {
+                font-size: 10px;
+                padding: 4px 8px;
+                gap: 4px;
+            }
+            
+            .user-profile-icon {
+                width: 18px;
+                height: 18px;
+                font-size: 8px;
+            }
+            
+            .hero {
+                padding: 50px 10px 150px;
+            }
+            
+            .hero h1 { 
+                font-size: 22px; 
+                margin-top: 0;
+                letter-spacing: 0.5px;
+            }
+            
+            .subtitle, .desc {
+                font-size: 12px;
+                margin-top: 10px;
+            }
+            
+            .desc {
+                max-width: 100%;
+            }
+            
+            .products {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                margin-top: 15px;
+            }
+            
+            .card {
+                min-height: 280px;
+                padding: 6px;
+            }
+            
+            .card img {
+                height: 160px;
+            }
+
+            h1 { 
+                color: #3d0026; 
+                font-size: 20px; 
+                margin-bottom: 15px;
+                text-align: center; 
+                font-family: "Times New Roman"; 
+                margin-top: 0;
+            }
+            
+            .card h3 {
+                font-size: 11px;
+                margin: 6px 0 2px;
+            }
+            
+            .price {
+                font-size: 11px;
+            }
+            
+            .heart-icon {
+                bottom: 50px;
+                right: 25px;
+                width: 24px !important;
+                height: 24px !important;
+            }
+            
+            .checkoutimg {
+                bottom: 50px;
+                right: 4px;
+                width: 24px !important;
+                height: 24px !important;
+            }
+            
+            .abouttext {
+                font-size: 13px;
+                max-width: 100%;
+                margin: 20px auto 0;
+            }
+            
+            .contactcard {
+                width: 98%;
+                max-width: 100%;
+                padding: 14px 10px;
+                height: auto;
+                min-height: auto;
+                border-radius: 25px;
+                margin: 30px auto 0;
+            }
+            
+            .contact-row {
+                font-size: 11px;
+                line-height: 1.4;
+                gap: 6px;
+            }
+            
+            .contact-logo {
+                width: 28px;
+                height: 28px;
+                min-width: 28px;
+            }
+            
+            .reviews-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .reviews-subtitle {
+                font-size: 13px;
+                margin-bottom: 15px;
+            }
+            
+            .review-customer {
+                font-size: 13px;
+            }
+            
+            .review-card {
+                padding: 12px;
+            }
+            
+            .review-comment {
+                font-size: 11px;
+            }
+            
+            .review-stars {
+                font-size: 16px;
+            }
+            
+            .review-carousel {
+                aspect-ratio: 1 / 1;
+                margin-bottom: 8px;
+            }
+            
+            section {
+                padding: 18px 10px;
+                scroll-margin-top: 40px;
+            }
+            
+            #contact,
+            #about,
+            #bracelets,
+            #keychain {
+                padding-top: 40px;
+            }
+            
+            footer {
+                padding: 12px 8px;
+                font-size: 12px;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 480px) {
+            .nav-menu a {
+                font-size: 9px;
+                padding: 3px 4px;
+            }
+            
+            .logo-nav {
+                font-size: 12px;
+            }
+            
+            .hero h1 { 
+                font-size: 18px;
+            }
+            
+            .subtitle, .desc {
+                font-size: 11px;
+            }
+            
+            h1 {
+                font-size: 18px;
+            }
+            
+            .card h3 {
+                font-size: 10px;
+            }
+            
+            .price {
+                font-size: 10px;
+            }
+            
+            .abouttext {
+                font-size: 12px;
+            }
+
+            .contact-row {
+                font-size: 10px;
+            }
+
+            .reviews-subtitle {
+                font-size: 12px;
+            }
+
+            .review-customer {
+                font-size: 12px;
+            }
+
+            .review-comment {
+                font-size: 10px;
+            }
+        }
+
+        /* Landscape mode adjustments */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .hero {
+                padding: 40px 15px 100px;
+                min-height: auto;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            nav {
+                padding: 8px 10px;
+            }
+        }
+
+        /* User Profile Styles */
+        .user-menu {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(214, 51, 132, 0.1);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #d63384;
+            transition: 0.3s;
+            min-height: 44px;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        .user-profile:hover {
+            background: rgba(214, 51, 132, 0.2);
+        }
+        
+        .user-profile:active {
+            transform: scale(0.98);
+        }
+
+        .user-profile-icon {
+            width: 28px;
+            height: 28px;
+            background: #d63384;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            z-index: 1000;
+            margin-top: 10px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu button {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            text-align: left;
+            color: #333;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+            font-family: "Times New Roman";
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            touch-action: manipulation;
+        }
+
+        .dropdown-menu a:hover,
+        .dropdown-menu button:hover {
+            background: #f8f9fa;
+            color: #d63384;
+        }
+
+        .dropdown-menu a:first-child,
+        .dropdown-menu button:first-child {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .dropdown-menu a:last-child,
+        .dropdown-menu button:last-child {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .logout-btn {
+            color: #d63384;
+            font-weight: 600;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .reviews-section {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            min-height: auto;
+            background: linear-gradient(180deg, rgba(255, 241, 247, 0.3) 0%, rgba(248, 232, 240, 0.5) 100%);
+            border-top: 2px solid rgba(214, 51, 132, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reviews-title {
+            margin-bottom: 18px;
+        }
+
+        .reviews-subtitle {
+            text-align: center;
+            font-family: "Times New Roman";
+            font-size: 22px;
+            color: #6d214f;
+            margin-bottom: 50px;
+            line-height: 1.5;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+            width: 100%;
+        }
+
+        .review-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 35px rgba(109, 33, 79, 0.15);
+            border: 1px solid rgba(214, 51, 132, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: 100%;
+        }
+
+        .review-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 50px rgba(109, 33, 79, 0.2);
+        }
+
+        .review-stars {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #ffbf00;
+            font-size: 26px;
+            margin-bottom: 8px;
+            order: 1;
+            flex-wrap: wrap;
+        }
+
+        .review-stars-value {
+            margin-left: 12px;
+            color: #d63384;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .review-carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #f8e8f0 0%, #ffe8f0 100%);
+            aspect-ratio: 1 / 1;
+            margin-bottom: 8px;
+            order: 2;
+            box-shadow: 0 4px 12px rgba(109, 33, 79, 0.1);
+            max-width: 100%;
+        }
+
+        .review-carousel-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .review-carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .review-carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .review-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 42px;
+            height: 42px;
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            background: rgba(61, 0, 38, 0.8);
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: background 0.2s ease, transform 0.2s ease;
+            z-index: 5;
+            min-width: 44px;
+            min-height: 44px;
+            touch-action: manipulation;
+        }
+
+        .review-nav:hover {
+            background: rgba(61, 0, 38, 0.95);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .review-nav:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .review-nav.prev {
+            left: 12px;
+        }
+
+        .review-nav.next {
+            right: 12px;
+        }
+
+        .review-customer {
+            font-family: "Times New Roman";
+            font-size: 22px;
+            font-weight: 600;
+            color: #3d0026;
+            margin-bottom: 10px;
+            order: 3;
+            word-break: break-word;
+        }
+
+        .review-comment {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #555;
+            word-break: break-word;
+            order: 4;
+        }
+
+        .reviews-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 30px;
+            background: rgba(248, 232, 240, 0.6);
+            border-radius: 18px;
+            color: #6d214f;
+            font-size: 18px;
+            border: 2px dashed rgba(214, 51, 132, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        // Authentication Check
+        function checkAuthentication() {
+            const userLogin = localStorage.getItem('userLogin');
+            if (!userLogin) {
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // Clear any lingering direct checkout data when returning to main page
+        localStorage.removeItem("directCheckoutProduct");
+
+        // Run auth check when page loads
+        window.addEventListener('load', function() {
+            checkAuthentication();
+        });
+    </script>
+
+    <nav>
+        <div class="logo-nav">
+            <img src="image6.jpg" alt="Mystic Charms Logo" class="logo-img">
+            Mystic Charms
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#bracelets">Bracelets</a></li>
+            <li><a href="#keychain">Keychain</a></li>
+        </ul>
+        
+        <div class="nav-icons">
+            <a href="cart.html" title="View Cart">
+            <img src="fav.jpg" class="icon" id="heartIcon" alt="Add to Carts"></a>
+
+            <a href="orders.html" title="View Orders">
+            <img src="orders.png" class="icon" id="orderIcon" alt="View orders"></a>
+
+            <a href="settings.html" title="Settings">
+            <img src="settings-icon.png" alt="Settings" class="icon"></a>
+
+            <div class="user-menu">
+    <div class="user-profile" onclick="toggleUserMenu()">
+        <div class="user-profile-icon" id="userInitial">U</div>
+        <span id="userName">User</span>
+    </div>
+</div>
+        </div>
+    </nav>
+
+    <!-- HOME -->
+    <section id="home" class="hero">
+        <h1>MYSTIC CHARMS</h1>
+        <p class="subtitle"> <i> Designed with quiet charm ♥︎ </i></p>
+        <p class="desc">
+            Discover Mystic Charms — delicate bracelets and charming keychains
+            made to mix, match, and stack.
+        </p>
+    </section>
+
+    <!-- BRACELETS - COMPLETE -->
+<section id="bracelets">
+    <h1>Bracelets</h1>
+    <div class="products">
+        <div class="card" data-id="001" data-name="Pink & Pearl Bracelet" data-price="75" data-image="image2.jpg">
+            <img src="image2.jpg">
+            <h3>Pink & Pearl Bracelet</h3>
+            <p class="price">₱75.00</p>
+            <img src="heart-empty.jpg" alt="Favorite" class="heart-icon">
+            <img src="checkout.png" alt="Checkout Now" class="checkoutimg">
+        </div>
+
+        <div class="card" data-id="002" data-name="Pink & Pearl Bracelet" data-price="75" data-image="image3.jpg">
+            <img src="image3.jpg">
+            <h3>Pink & Pearl Bracelet</h3>
+            <p class="price">₱75.00</p>
+            <img src="heart-empty.jpg" alt="Favorite" class="heart-icon">
+            <img src="checkout.png" alt="Checkout Now" class="checkoutimg">
+        </div>
+
+        <div class="card" data-id="003" data-name="Blue & Pearl Bracelet" data-price="75" data-image="image4.jpg">
+            <img src="image4.jpg">
+            <h3>Blue & Pearl Bracelet</h3>
+            <p class="price">₱75.00</p>
+            <img src="heart-empty.jpg" alt="Favorite" class="heart-icon">
+            <img src="checkout.png" alt="Checkout Now" class="checkoutimg">
+        </div>
+
+        <div class="card" data-id="004" data-name="Blue & Pearl Bracelet" data-price="75" data-image="image11.jpg">
+            <img src="image11.jpg">
+            <h3>Blue & Pearl Bracelet</h3>
+            <p class="price">₱75.00</p>
+            <img src="heart-empty.jpg" alt="Favorite" class="heart-icon">
+            <img src="checkout.png" alt="Checkout Now" class="checkoutimg">
+        </div>
+
+        <div class="card" data-id="005" data-name="Blue & Pearl Bracelet" data-price="75" data-image="image10.jpg">
+            <img src="image10.jpg">
+            <h3>Blue & Pearl Bracelet</h3>
+            <p class="price">₱75.00</p>
+            <img src="heart-empty.jpg" alt="Favorite" class="heart-icon">
+            <img src="checkout.png" alt="Checkout Now" class="checkoutimg">
+        </div>
+
+        <div class="card" data-id="006" data-name="Blue & Pearl Bracelet" data-price="75" data-image="image12.jpg">
+            <img src="image12.jpg">
+            <h3>Blue & Pearl Bracelet</h3>
+            <p class="price">₱75.00</p>
+            <img src="heart-empty.jpg" alt="Favorite" class="heart-icon">
+            <img src="checkout.png" alt="Checkout Now" class="checkoutimg">
+        </div>
+
+        <div class="card" data-id="007" data-name="Blue & Pearl Bracelet" data-price="75" data-image="image13.jpg">
+            <img src="image13.jpg">
+            <h3>Blue & Pearl Bracelet</h3>
+            <p class="price">₱75.00</p>
+            <img src="heart-empty.jpg" alt="Favorite" class="heart-icon">
+            <img src="checkout.png" alt="Checkout Now" class="checkoutimg">
+        </div>
+
+        <div class="card" data-id="008" data-name="Blue & Pearl Bracelet" data-price="75" data-image="image14.jpg">
+            <img src="image14.jpg">
+            <h3>Blue & Pearl Bracelet</h3>
+            <p class="price">₱75.00</p>
+            <img src="heart-empty.jpg" alt="Favorite" class="heart-icon">
+            <img src="checkout.png" alt="Checkout Now" class="checkoutimg">
+        </div>
+
+        <div class="card" data-id="009" data-name="Blue & Pearl Bracelet" data-price="75" data-image="image15.jpg">
+            <img src="image15.jpg">
+            <h3>Blue & Pearl Bracelet</h3>
+            <p class="price">₱75.00</p>
+            <img src="heart-empty.jpg" alt="Favorite" class="heart-icon">
+            <img src="checkout.png" alt="Checkout Now" class="checkoutimg">
+        </div>
+    </div>
+</section>
+
+<!-- KEYCHAINS - COMPLETE -->
+<section id="keychain">
+    <h1>Keychains</h1>
+    <div class="products">
+        <div class="card" data-id="010" data-name="Pink & Pearl Keychain" data-price="75" data-image="image16.jpg">
+            <img src="image16.jpg">
+            <h3>Pink & Pearl Keychain</h3>
+            <p class="price">₱75.00</p>
+            <img src="heart-empty.jpg" alt="Favorite" class="heart-icon">
+            <img src="checkout.png" alt="Checkout Now" class="checkoutimg">
+        </div>
+
+        <div class="card" data-id="011" data-name="Blue & Pearl Keychain" data-price="75" data-image="image17.jpg">
+            <img src="image17.jpg">
+            <h3>Blue & Pearl Keychain</h3>
+            <p class="price">₱75.00</p>
+            <img src="heart-empty.jpg" alt="Favorite" class="heart-icon">
+            <img src="checkout.png" alt="Checkout Now" class="checkoutimg">
+        </div>
+
+        <div class="card" data-id="012" data-name="Gold & Pearl Keychain" data-price="75" data-image="image18.jpg">
+            <img src="image18.jpg">
+            <h3>Gold & Pearl Keychain</h3>
+            <p class="price">₱75.00</p>
+            <img src="heart-empty.jpg" alt="Favorite" class="heart-icon">
+            <img src="checkout.png" alt="Checkout Now" class="checkoutimg">
+        </div>
+
+        <div class="card" data-id="013" data-name="Gold & Pearl Keychain" data-price="75" data-image="image19.jpg">
+            <img src="image19.jpg">
+            <h3>Gold & Pearl Keychain</h3>
+            <p class="price">₱75.00</p>
+            <img src="heart-empty.jpg" alt="Favorite" class="heart-icon">
+            <img src="checkout.png" alt="Checkout Now" class="checkoutimg">
+        </div>
+    </div>
+</section>
+
+<section id="reviews" class="reviews-section">
+    <h1 class="reviews-title">Customer Reviews</h1>
+    <p class="reviews-subtitle">Real feedback from completed orders, updated live for every customer.</p>
+    <div class="reviews-grid" id="reviewsGrid">
+        <div class="reviews-empty">Loading reviews...</div>
+    </div>
+</section>
+
+    <footer>
+        © 2026 Mystic Charms
+    </footer>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Check if user is logged in
+    const userLogin = JSON.parse(localStorage.getItem("userLogin"));
+    let cartKey = "cart";
+    let cart = [];
+    
+    if (userLogin) {
+        const userId = userLogin.userId;
+        cartKey = `cart_${userId}`;
+    }
+    
+    cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+    function updateHeart(heart, isAdded) {
+        if (isAdded) {
+            heart.src = "heart-filled.jpg";
+            heart.classList.add("filled");
+        } else {
+            heart.src = "heart-empty.jpg";
+            heart.classList.remove("filled");
+        }
+    }
+
+    // Initialize hearts (FAVORITE FUNCTION - UNCHANGED)
+    document.querySelectorAll(".heart-icon").forEach(heart => {
+        const card = heart.closest(".card");
+        const id = card.dataset.id;
+        const itemInCart = cart.find(item => item.id === id);
+        if (itemInCart) {
+            updateHeart(heart, true);
+        }
+    });
+
+    // Heart click = Toggle cart (FAVORITE FUNCTION - UNCHANGED)
+    document.querySelectorAll(".heart-icon").forEach(heart => {
+        heart.addEventListener("click", function () {
+            // Check if user is logged in before allowing cart operations
+            if (!userLogin) {
+                alert("Please log in to add items to your cart.");
+                window.location.href = "login.html";
+                return;
+            }
+            
+            const card = this.closest(".card");
+            const id = card.dataset.id;
+            
+            if (!id) return;
+
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (!existingItem) {
+                cart.push({ id: id, quantity: 1 });
+                updateHeart(this, true);
+            } else {
+                cart = cart.filter(item => item.id !== id);
+                updateHeart(this, false);
+            }
+
+            localStorage.setItem(cartKey, JSON.stringify(cart));
+        });
+    });
+
+    // NEW: Checkout button functionality (DIRECT TO CHECKOUT - NO CART)
+    document.querySelectorAll(".checkoutimg").forEach(checkoutImg => {
+        checkoutImg.addEventListener("click", function(e) {
+            e.preventDefault(); // Prevent default link behavior
+            
+            // Check if user is logged in
+            if (!userLogin) {
+                alert("Please log in to proceed to checkout.");
+                window.location.href = "login.html";
+                return;
+            }
+            
+            const card = this.closest(".card");
+            const productData = {
+                id: card.dataset.id,
+                name: card.dataset.name,
+                price: parseFloat(card.dataset.price),
+                image: card.querySelector("img").src,
+                quantity: 1
+            };
+            
+            // Store ONLY for checkout (separate from cart)
+            localStorage.setItem("directCheckoutProduct", JSON.stringify(productData));
+            // Set flag to indicate this is a direct checkout
+            localStorage.setItem("checkoutFromDirect", "true");
+            window.location.href = "checkout.html";
+        });
+    });
+
+    // User Menu Functions
+    function toggleUserMenu() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(event) {
+        const userMenu = document.querySelector('.user-menu');
+        if (userMenu && !userMenu.contains(event.target)) {
+            document.getElementById('userDropdown').classList.remove('show');
+        }
+    });
+
+    function logout() {
+        localStorage.removeItem('userLogin');
+        window.location.href = 'login.html';
+    }
+
+    function viewProfile(e) {
+        e.preventDefault();
+        const userLogin = JSON.parse(localStorage.getItem('userLogin'));
+        alert(`Logged in as:\n\nID: ${userLogin.userId}\nType: ${userLogin.type}\nLogin Time: ${userLogin.loginTime}`);
+    }
+
+    // Initialize user profile on load
+    window.addEventListener('load', function() {
+        const userLogin = JSON.parse(localStorage.getItem('userLogin'));
+        if (userLogin) {
+            const userId = userLogin.userId;
+            const initial = userId.charAt(0).toUpperCase();
+            document.getElementById('userInitial').textContent = initial;
+            
+            // Display email or mobile
+            if (userLogin.type === 'email') {
+                const emailParts = userId.split('@');
+                document.getElementById('userName').textContent = emailParts[0];
+            } else {
+                document.getElementById('userName').textContent = userId.substring(userId.length - 4);
+            }
+        }
+    });
+});
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCDNdTMCcFZEts9nYT0ILUeN_v7YY09380",
+    authDomain: "mywebsite-829b5.firebaseapp.com",
+    projectId: "mywebsite-829b5",
+    storageBucket: "mywebsite-829b5.appspot.com",
+    messagingSenderId: "322237844842",
+    appId: "1:322237844842:web:eee18bf1c0f08fd748a913",
+    databaseURL: "https://mywebsite-829b5-default-rtdb.firebaseio.com"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const reviewsGrid = document.getElementById("reviewsGrid");
+
+// Debug: Check all orders in database
+(async () => {
+    try {
+        const snapshot = await get(ref(db, "orders"));
+        if (snapshot.exists()) {
+            const allOrders = Object.values(snapshot.val());
+            console.log("=== FIREBASE DATABASE DEBUG ===");
+            console.log("Total orders in database:", allOrders.length);
+            if (allOrders.length > 0) {
+                console.log("First order structure:", allOrders[0]);
+                console.log("Orders with ratings:", allOrders.filter(o => o.rating).length);
+                console.log("Orders with status 'delivered':", allOrders.filter(o => o.status === "delivered").length);
+                console.log("Orders with status 'completed':", allOrders.filter(o => o.status === "completed").length);
+                allOrders.forEach((order, idx) => {
+                    console.log(`Order ${idx}: id=${order.id}, status=${order.status}, rating=${order.rating}, hasImages=${Array.isArray(order.feedbackImages) ? order.feedbackImages.length : 0}`);
+                });
+            }
+        }
+    } catch (error) {
+        console.error("Debug error:", error);
+    }
+})();
+
+reviewsGrid.addEventListener("click", (event) => {
+    const button = event.target.closest(".review-nav");
+    if (!button) return;
+
+    const carousel = button.closest(".review-carousel");
+    const track = carousel?.querySelector(".review-carousel-track");
+    if (!carousel || !track) return;
+
+    const totalSlides = Number(carousel.dataset.totalSlides) || 0;
+    if (totalSlides <= 1) return;
+
+    const direction = button.classList.contains("next") ? 1 : -1;
+    const currentIndex = Number(carousel.dataset.index) || 0;
+    const nextIndex = (currentIndex + direction + totalSlides) % totalSlides;
+
+    carousel.dataset.index = String(nextIndex);
+    track.style.transform = `translateX(-${nextIndex * 100}%)`;
+});
+
+onValue(ref(db, "orders"), (snapshot) => {
+    const rawOrders = snapshot.exists() ? Object.values(snapshot.val()) : [];
+    console.log("Total orders found:", rawOrders.length);
+    
+    // Debug: Check first order with images
+    const ordersWithImages = rawOrders.filter(o => Array.isArray(o.feedbackImages) && o.feedbackImages.length > 0);
+    console.log("Orders with images:", ordersWithImages.length);
+    if (ordersWithImages.length > 0) {
+        console.log("First order with images:", ordersWithImages[0]);
+    }
+    
+    const ratedOrders = rawOrders
+        .filter((order) => {
+            const hasRating = Number(order.rating) > 0;
+            const hasRateed = order.hasRated === true;
+            const isDelivered = order.status === "delivered";
+            const isCompleted = order.status === "completed";
+            const passes = (hasRating || hasRateed) && (isDelivered || isCompleted);
+            
+            return passes;
+        })
+        .sort((a, b) => {
+            const timeA = Number(a.ratedAt) || Date.parse(a.date) || 0;
+            const timeB = Number(b.ratedAt) || Date.parse(b.date) || 0;
+            return timeB - timeA;
+        });
+    
+    console.log("Rated orders after filter:", ratedOrders.length);
+
+    if (!ratedOrders.length) {
+        reviewsGrid.innerHTML = '<div class="reviews-empty">No customer reviews yet.</div>';
+        return;
+    }
+
+    reviewsGrid.innerHTML = ratedOrders.map((order, index) => renderReviewCard(order, index)).join("");
+});
+
+function renderReviewCard(order, index) {
+    const rating = Math.max(1, Math.min(5, Number(order.rating) || 0));
+    const images = Array.isArray(order.feedbackImages) ? order.feedbackImages.filter(Boolean) : [];
+    const stars = Array.from({ length: 5 }, (_, starIndex) => starIndex < rating ? "★" : "☆").join("");
+    const comment = escapeHtml(order.feedback?.trim() || "Shared a star rating for this order.");
+    
+    // Debug logging
+    console.log(`Review ${index}: Images count = ${images.length}, Order ID = ${order.id}`, images);
+    
+    // Use customerName if available (already masked), otherwise mask the name
+    const displayName = order.customerName || maskCustomerName(order.name || order.userId || "Customer");
+    const maskedName = escapeHtml(displayName);
+    
+    const carousel = images.length
+        ? `
+            <div class="review-carousel" data-index="0" data-total-slides="${images.length}">
+                <div class="review-carousel-track">
+                    ${images.map((url, imageIndex) => `
+                        <div class="review-carousel-slide">
+                            <img src="${escapeAttribute(url)}" alt="Customer review photo ${imageIndex + 1}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    `).join("")}
+                </div>
+                ${images.length > 1 ? '<button class="review-nav prev" type="button" aria-label="Previous photo">&lt;</button><button class="review-nav next" type="button" aria-label="Next photo">&gt;</button>' : ""}
+            </div>
+        `
+        : "";
+
+    return `
+        <article class="review-card" data-review-index="${index}">
+            <div class="review-stars" aria-label="${rating} out of 5 stars">
+                <span>${stars}</span>
+                <span class="review-stars-value">${rating}/5</span>
+            </div>
+            ${carousel}
+            <h3 class="review-customer">${maskedName}</h3>
+            <p class="review-comment">${comment}</p>
+        </article>
+    `;
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function escapeAttribute(value) {
+    return escapeHtml(value);
+}
+
+function maskCustomerName(name) {
+    if (!name || name.length < 2) return "Customer";
+    const trimmed = String(name).trim();
+    if (trimmed.length <= 2) return trimmed;
+    
+    const firstChar = trimmed.charAt(0);
+    const lastChar = trimmed.charAt(trimmed.length - 1);
+    const maskedLength = Math.max(trimmed.length - 2, 3);
+    const masked = "*".repeat(maskedLength);
+    
+    return `${firstChar}${masked}${lastChar}`;
+}
+</script>
+</body>
+</html>

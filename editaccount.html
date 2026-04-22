@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account & Security - Mystic Charms</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body { 
+            background: linear-gradient(135deg, #fff1f7 0%, #f8e8f0 100%); 
+            font-family: Arial; 
+            color: #333;
+        }
+
+       nav {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 30%;
+            vertical-align: middle;
+        }
+        
+        .logo-nav {
+            font-size: 25px;
+            font-family: "Times New Roman";
+            font-weight: bold;
+            color: #d63384;
+            margin-right: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-menu a {
+            text-decoration: none;
+            padding: 25px;
+            color: #3d0026;
+            font-size: 22px;
+            font-family: "Times New Roman";
+            font-weight: 500;
+        }
+
+        .nav-menu a:hover { color: #d63384; }
+
+        .nav-icons {
+            display: flex;
+            margin-right: 15px;
+            gap: 17px;
+        }
+
+        .icon {
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            object-fit: contain;
+            margin-right: 1px;
+        }
+
+        .icon:hover {
+            opacity: 0.7;
+            transition: 0.2s ease-in-out;
+        }
+        .page-header {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: #3d0026;
+            font-size: 50px;
+            font-family: "Times New Roman";
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+            padding: 0 50px 80px;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .account-panel, .edit-panel {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .account-panel { width: 40%; }
+        .edit-panel { width: 60%; opacity: 0; transform: translateX(50px); transition: 0.4s; }
+
+        .edit-panel.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .account-title {
+            font-size: 22px;
+            font-weight: bold;
+            border-bottom: 2px solid #d63384;
+            margin-bottom: 20px;
+        }
+
+        .account-option {
+            padding: 20px;
+            background: #f8f9fa;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .account-option:hover {
+            background: #ffe3ef;
+        }
+
+        .option-arrow {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .option-value {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .edit-title {
+            font-size: 24px;
+            border-bottom: 2px solid #d63384;
+            margin-bottom: 20px;
+        }
+
+        .form-group { margin-bottom: 20px; position: relative; }
+
+        input {
+            width: 100%;
+            padding: 15px 45px 15px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+        }
+
+        input:focus {
+            border-color: #d63384;
+            outline: none;
+        }
+
+        /* PASSWORD TOGGLE */
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #d63384;
+            padding: 4px 8px;
+            height: auto;
+            width: auto;
+        }
+
+        .password-toggle:hover { opacity: 0.7; }
+
+        /* PASSWORD FIELDS */
+        .password-fields {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .password-fields.active { display: block; }
+
+        .save-btn {
+            width: 100%;
+            padding: 15px;
+            background: #d63384;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .save-btn:hover { background: #b62a70; }
+
+        /* PERFECTLY POSITIONED NOTIFICATION - TOP RIGHT */
+        .notification {
+            position: fixed;
+            top: 120px; /* Below navbar */
+            right: 20px;
+            background: white;
+            border: 2px solid #d63384;
+            border-radius: 12px;
+            padding: 16px 24px;
+            box-shadow: 0 8px 25px rgba(214, 51, 132, 0.25);
+            z-index: 10000;
+            max-width: 380px;
+            font-size: 15px;
+            font-weight: 500;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .notification.success {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #f8fff9 0%, #d4edda 100%);
+            color: #155724;
+        }
+
+        .notification.error {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, #fff5f5 0%, #f8d7da 100%);
+            color: #721c24;
+        }
+
+        .notification.active {
+            display: block;
+            animation: slideInRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes slideInRight {
+            0% { 
+                transform: translateX(120%); 
+                opacity: 0; 
+            }
+            100% { 
+                transform: translateX(0); 
+                opacity: 1; 
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 12px 10px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .logo-nav {
+                font-size: 18px;
+                margin-right: 5px;
+            }
+
+            .logo-img {
+                width: 32px;
+                height: 32px;
+            }
+
+            .nav-menu {
+                gap: 10px;
+            }
+
+            .nav-menu a {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+
+            .icon {
+                width: 28px;
+                height: 28px;
+            }
+
+            .main-content {
+                flex-direction: column;
+                padding: 0 12px 40px;
+            }
+
+            .account-panel, .edit-panel {
+                width: 100%;
+            }
+
+            .panel-title {
+                font-size: 18px;
+            }
+
+            .form-group {
+                margin-bottom: 14px;
+            }
+
+            label {
+                font-size: 12px;
+            }
+
+            input, textarea {
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .notification {
+                top: 100px;
+                right: 12px;
+                left: 12px;
+                max-width: none;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                padding: 10px 8px;
+                gap: 6px;
+            }
+
+            .logo-nav {
+                font-size: 14px;
+            }
+
+            .logo-img {
+                width: 28px;
+                height: 28px;
+            }
+
+            .nav-menu {
+                gap: 8px;
+            }
+
+            .nav-menu a {
+                padding: 10px 6px;
+                font-size: 11px;
+            }
+
+            .icon {
+                width: 24px;
+                height: 24px;
+            }
+
+            .main-content {
+                padding: 0 10px 30px;
+            }
+
+            .panel-title {
+                font-size: 16px;
+            }
+
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            label {
+                font-size: 11px;
+            }
+
+            input, textarea {
+                padding: 8px;
+                font-size: 11px;
+            }
+
+            .notification {
+                top: 90px;
+                right: 10px;
+                left: 10px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-menu a {
+                font-size: 10px;
+                padding: 8px 5px;
+            }
+
+            .panel-title {
+                font-size: 14px;
+            }
+
+            label {
+                font-size: 10px;
+            }
+
+            input, textarea {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo-nav">
+        <img src="image6.jpg" class="logo-img">
+        Mystic Charms
+    </div>
+
+    <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#bracelets">Bracelets</a></li>
+        <li><a href="index.html#keychain">Keychain</a></li>
+    </ul>
+
+    <div class="nav-icons">
+        <a href="cart.html"><img src="fav.jpg" class="icon"></a>
+        <a href="orders.html"><img src="orders.png" class="icon"></a>
+        <a href="settings.html"><img src="settings-icon.png" class="icon"></a>
+    </div>
+</nav>
+
+<div class="page-header">
+    <h1>Account & Security</h1>
+</div>
+
+<div class="main-content">
+
+    <!-- LEFT -->
+    <div class="account-panel">
+        <div class="account-title">Change Info</div>
+
+        <div class="account-option" onclick="openEdit('fullname')">
+            Full Name
+            <div class="option-value" id="fullname-display">Loading...</div>
+            <span class="option-arrow">></span>
+        </div>
+
+        <div class="account-option" onclick="openEdit('mobile')">
+            Mobile
+            <div class="option-value" id="mobile-display">Loading...</div>
+            <span class="option-arrow">></span>
+        </div>
+
+        <div class="account-option" onclick="openEdit('email')">
+            Email
+            <div class="option-value" id="email-display">Loading...</div>
+            <span class="option-arrow">></span>
+        </div>
+
+        <div class="account-option" onclick="openEdit('password')">
+            Password
+            <div class="option-value" id="password-display">••••••••</div>
+            <span class="option-arrow">></span>
+        </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="edit-panel" id="editPanel">
+        <div class="edit-title" id="edit-title">Edit</div>
+
+        <div class="form-group">
+            <input type="text" id="edit-input">
+        </div>
+
+        <!-- PASSWORD FIELDS -->
+        <div class="password-fields" id="passwordFields">
+            <div class="form-group">
+                <input type="password" id="currentPassword" placeholder="Current Password">
+                <button type="button" class="password-toggle" onclick="togglePassword('currentPassword')" title="Show password">Show</button>
+            </div>
+            <div class="form-group">
+                <input type="password" id="newPassword" placeholder="New Password">
+                <button type="button" class="password-toggle" onclick="togglePassword('newPassword')" title="Show password">Show</button>
+            </div>
+        </div>
+
+        <button class="save-btn" onclick="saveChanges()">Save</button>
+    </div>
+
+</div>
+
+<!-- PERFECTLY POSITIONED NOTIFICATION -->
+<div class="notification" id="notification">
+    <span id="notificationText"></span>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-database.js";
+
+const app = initializeApp({
+    apiKey: "AIzaSyCDCdTMCcFZEts9nYT0ILUeN_v7YY09380",
+    authDomain: "mywebsite-829b5.firebaseapp.com",
+    databaseURL: "https://mywebsite-829b5-default-rtdb.firebaseio.com"
+});
+
+const db = getDatabase(app);
+
+let user = null;
+let userKey = null;
+let field = "";
+
+/* LOAD USER */
+window.addEventListener("load", async () => {
+    const session = JSON.parse(localStorage.getItem("userLogin"));
+    if (!session) return location.href = "login.html";
+
+    const snap = await get(ref(db, "users"));
+
+    if (snap.exists()) {
+        for (const key in snap.val()) {
+            const u = snap.val()[key];
+
+            if (u.email === session.email || u.mobile === session.mobile) {
+                user = u;
+                userKey = key;
+                break;
+            }
+        }
+    }
+
+    if (!user) return alert("User not found");
+
+    updateUI();
+});
+
+/* UI */
+function updateUI() {
+    document.getElementById("fullname-display").textContent = user.fullname || "";
+    document.getElementById("mobile-display").textContent = user.mobile || "";
+    document.getElementById("email-display").textContent = user.email || "";
+    document.getElementById("password-display").textContent = "••••••••";
+}
+
+/* PASSWORD TOGGLE */
+window.togglePassword = (inputId) => {
+    const input = document.getElementById(inputId);
+    const toggle = input.nextElementSibling;
+    
+    if (input.type === "password") {
+        input.type = "text";
+        toggle.textContent = "Hide";
+        toggle.title = "Hide password";
+    } else {
+        input.type = "password";
+        toggle.textContent = "Show";
+        toggle.title = "Show password";
+    }
+};
+
+/* OPEN EDIT */
+window.openEdit = (f) => {
+    field = f;
+    document.getElementById("editPanel").classList.add("active");
+    document.getElementById("edit-title").innerText = "Edit " + f.charAt(0).toUpperCase() + f.slice(1);
+    
+    if (f === "password") {
+        document.getElementById("edit-input").style.display = "none";
+        document.getElementById("passwordFields").classList.add("active");
+        document.getElementById("currentPassword").focus();
+    } else {
+        document.getElementById("edit-input").style.display = "block";
+        document.getElementById("passwordFields").classList.remove("active");
+        document.getElementById("edit-input").value = user[f] || "";
+        document.getElementById("edit-input").focus();
+    }
+};
+
+/* SAVE */
+window.saveChanges = async () => {
+    let success = false;
+    let message = "";
+
+    try {
+        if (field === "password") {
+            const currentPass = document.getElementById("currentPassword").value;
+            const newPass = document.getElementById("newPassword").value;
+
+            if (!currentPass) {
+                showNotification("Please enter current password", true);
+                return;
+            }
+            if (currentPass !== user.password) {
+                showNotification("Wrong current password!", true);
+                return;
+            }
+            if (!newPass) {
+                showNotification("Please enter new password", true);
+                return;
+            }
+            if (newPass.length < 6) {
+                showNotification("Password must be at least 6 characters", true);
+                return;
+            }
+
+            user.password = newPass;
+        } else {
+            const value = document.getElementById("edit-input").value.trim();
+            if (!value) {
+                showNotification("Please enter a value", true);
+                return;
+            }
+            // Email validation
+            if (field === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                showNotification("Please enter a valid email", true);
+                return;
+            }
+            // Mobile validation (simple phone number check)
+            if (field === "mobile" && !/^\+?[1-9]\d{1,14}$/.test(value.replace(/\s/g, ''))) {
+                showNotification("Please enter a valid mobile number", true);
+                return;
+            }
+            
+            user[field] = value;
+        }
+
+        // Save to Firebase
+        await set(ref(db, "users/" + userKey), user);
+        success = true;
+        message = field.charAt(0).toUpperCase() + field.slice(1) + " updated successfully!";
+
+        // Update session (except password)
+        let session = JSON.parse(localStorage.getItem("userLogin"));
+        if (field !== "password") session[field] = user[field];
+        localStorage.setItem("userLogin", JSON.stringify(session));
+
+        updateUI();
+        
+    } catch (error) {
+        console.error("Save error:", error);
+        success = false;
+        message = "Failed to save changes. Please try again.";
+    }
+
+    showNotification(message, !success);
+
+    // Reset form
+    if (success) {
+        document.getElementById("editPanel").classList.remove("active");
+        document.getElementById("edit-input").style.display = "block";
+        document.getElementById("passwordFields").classList.remove("active");
+        document.getElementById("currentPassword").value = "";
+        document.getElementById("newPassword").value = "";
+        document.getElementById("edit-input").value = "";
+    }
+};
+
+/* PERFECTLY POSITIONED NOTIFICATION */
+function showNotification(message, isError = false) {
+    const notification = document.getElementById("notification");
+    const text = document.getElementById("notificationText");
+    
+    text.textContent = message;
+    notification.className = `notification ${isError ? 'error' : 'success'}`;
+    notification.classList.add("active");
+    
+    setTimeout(() => {
+        notification.classList.remove("active");
+    }, 3500);
+}
+</script>
+
+</body>
+</html>
